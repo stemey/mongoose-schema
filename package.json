@@ -1,0 +1,25 @@
+{
+  "name": "mongoose-schema",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --bail --timeout 5000"
+  },
+  "author": {
+    "name": "Stefan Meyer"
+  },
+  "license": "MIT",
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "mongoose": ">=3.8.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.8.2",
+    "expect.js": "~0.2.0",
+    "mongoose": "~3.8.1",
+    "async": "~0.2.9"
+  }
+
+}
