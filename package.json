@@ -3,9 +3,6 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha --bail --timeout 5000"
-  },
   "author": {
     "name": "Stefan Meyer"
   },
