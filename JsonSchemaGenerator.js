@@ -41,7 +41,7 @@ JsonSchemaGenerator.prototype.generateSchema = function (schema) {
 JsonSchemaGenerator.prototype.generateProperty = function (path, schema) {
     var property = {};
     //var select = controller.get('select');
-    var method = "generate" + this.swaggerTypeFor(path.options.type);
+    var method = "generate" + this.swaggerTypeFor(path.options.type).type;
     if (typeof this[method] === "function") {
         var property = this[method](path, schema);
     } else {
@@ -62,36 +62,6 @@ JsonSchemaGenerator.prototype.generateProperties = function (schema) {
             properties[name] = property;
 
 
-            // Configure the property
-            /*property.required = path.options.required;
-             property.type = type;
-
-             // Set enum values if applicable
-             if (path.enumValues && path.enumValues.length > 0) {
-             property.allowableValues = { valueType: 'LIST', values: path.enumValues };
-             }
-
-             // Set allowable values range if min or max is present
-             if (!isNaN(path.options.min) || !isNaN(path.options.max)) {
-             property.allowableValues = { valueType: 'RANGE' };
-             }
-
-             if (!isNaN(path.options.min)) {
-             property.allowableValues.min = path.options.min;
-             }
-
-             if (!isNaN(path.options.max)) {
-             property.allowableValues.max = path.options.max;
-             }
-
-             if (!property.type) {
-             console.log('Warning: That field type is not yet supported in baucis Swagger definitions, using "string."');
-             console.log('Path name: %s.%s', definition.id, name);
-             console.log('Mongoose type: %s', path.options.type);
-             property.type = 'string';
-             }*/
-
-            //definition.properties[name] = property;
         }
     }, this);
 
@@ -115,8 +85,8 @@ JsonSchemaGenerator.prototype.generateString = function (path, schema) {
     var property = {};
     this.setGeneralProperties(property, path);
     property.type = "string";
-    if (path.options.enumValues) {
-        property.enum = path.options.enumValues;
+    if (path.options.enum) {
+        property.enum = path.options.enum;
     }
     return property;
 }
@@ -159,7 +129,7 @@ JsonSchemaGenerator.prototype.generateArray = function (path, schema) {
     var property = {};
     this.setGeneralProperties(property, path);
     property.type = "array";
-    var method = "generateType" + this.swaggerTypeFor(path.options.type[0]);
+    var method = "generateType" + this.swaggerTypeFor(path.options.type[0]).type;
     if (typeof this[method] === "function") {
         property.items = this[method](path.options.type[0]);
     }
@@ -196,10 +166,7 @@ JsonSchemaGenerator.prototype.generateObjectId = function (path, schema) {
     if (path.options.ref) {
         this.setGeneralProperties(property, path);
         // an object of propertiey
-        property.url = path.options.ref;
-        property.type = "ref";
-        property.schemaUrl = path.options.ref;
-        property.idProperty = "_id";
+        property.type = "string";
     } else {
         this.setGeneralProperties(property, path);
         // an object of propertiey

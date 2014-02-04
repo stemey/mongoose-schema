@@ -1,25 +1,10 @@
 var expect = require('expect.js');
 var Schema = require('mongoose').Schema;
+var Vegetable = require("./fixtures.js");
 var SchemaGenerator = require('../GformSchemaGenerator.js');
 
 var generator = new SchemaGenerator();
 
-var Berry = new Schema({
-    name: { type: String, required: true },
-    notSelected: {type: String, select: false}
-}, {_id: false});
-
-var Vegetable = new Schema({
-    name: { type: String, required: true },
-    lastname: String,
-    nicknames: [String],
-    berries: [Berry],
-    embedded: {
-        x: String,
-        y: String
-    },
-    related: { type: Schema.ObjectId, ref: 'vegetable' }
-});
 
 describe('GformSchemaGenerator', function () {
 
@@ -35,16 +20,36 @@ describe('GformSchemaGenerator', function () {
         expect(attribute).to.have.property("code", "lastname");
         done();
     });
+    it('should generate string prop correctly', function (done) {
+        var attribute = generator.generateString("label", Vegetable.paths["label"]);
+        expect(attribute).to.have.property("type", "string");
+        expect(attribute.values[0]).to.be("my");
+        done();
+    });
     it('should generate array of string prop correctly', function (done) {
         var attribute = generator.generateArray("nicknames", Vegetable.paths["nicknames"]);
         expect(attribute).to.have.property("type", "array");
         expect(attribute.element).to.have.property("type", "string");
         done();
     });
+    it('should generate array of string prop correctly 2', function (done) {
+        var attribute = generator.generateArray("moreNicknames", Vegetable.paths["moreNicknames"]);
+        expect(attribute).to.have.property("type", "array");
+        expect(attribute.element).to.have.property("type", "string");
+        expect(attribute.element).to.have.property("pattern", "/^a/");
+        done();
+    });
     it('should generate array of objects prop correctly', function (done) {
         var attribute = generator.generateArray("berries", Vegetable.paths["berries"]);
         expect(attribute).to.have.property("type", "array");
         expect(attribute.group.attributes[0]).to.have.property("code", "name");
+        done();
+    });
+    it('should generate array of refs correctly', function (done) {
+        var attribute = generator.generateArray("many", Vegetable.paths["many"]);
+        expect(attribute).to.have.property("type", "array");
+        expect(attribute.element).to.have.property("type", "ref");
+        expect(attribute.element).to.have.property("url");
         done();
     });
     it('should generate ObjectId prop correctly', function (done) {
@@ -71,7 +76,7 @@ describe('GformSchemaGenerator', function () {
             return a.code == "embedded"
         })[0];
         expect(embedded.group.attributes[0]).to.have.property("code", "x");
-        expect(Object.keys(schema.attributes).length).to.be(7);
+        expect(Object.keys(schema.attributes).length).to.be(12);
         done();
     });
 });

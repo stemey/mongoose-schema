@@ -6,7 +6,6 @@ var mongoose = require('mongoose');
 // __Private Members__
 
 
-
 // __Module Definition__
 var AbstractSchemaGenerator = module.exports = function () {
 };
@@ -30,23 +29,40 @@ AbstractSchemaGenerator.prototype.isIncluded = function (name, options) {
 
 }
 
-
-// Convert a Mongoose type into a Swagger type
-AbstractSchemaGenerator.prototype.swaggerTypeFor = function (type) {
-    if (!type) return null;
-    else if (type === String) return 'String';
+AbstractSchemaGenerator.prototype.convertType = function (type) {
+    if (typeof type === "string") {
+        return type;
+    }
+    if (type === String) return 'String';
     if (type === Number) return 'Number';
     if (type === Date) return 'Date';
     if (type === Boolean) return 'Boolean';
     if (type === mongoose.Schema.Types.ObjectId) return 'ObjectId';
     if (type === mongoose.Schema.Types.Oid) return 'Oid';
-    if (type === mongoose.Schema.Types.Array) return 'Array';
-    if (Array.isArray(type)) return 'Array';
     if (type === Object) return "Embedded";
+    if (type instanceof Object && type.type) {
+        return this.swaggerTypeFor(type.type);
+    }
     if (type instanceof Object) return "Embedded";
     if (type === mongoose.Schema.Types.Mixed) return null;
     if (type === mongoose.Schema.Types.Buffer) return null;
     throw new Error('Unrecognized type: ' + type);
+}
+
+// Convert a Mongoose type into a Swagger type
+AbstractSchemaGenerator.prototype.swaggerTypeFor = function (type) {
+    // type may be a Schema or an object with property type
+    if (type === mongoose.Schema.Types.Array || Array.isArray(type)) {
+        return {type:'Array'};
+    } else if (type.type) {
+        type.type = this.convertType(type.type);
+        return type;
+    } else {
+        var fullType = {};
+        fullType.type = this.convertType(type);
+        return fullType;
+    }
+
 };
 
 AbstractSchemaGenerator.prototype.getEmbeddedName = function (name) {

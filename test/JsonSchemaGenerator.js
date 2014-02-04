@@ -1,26 +1,10 @@
 var expect = require('expect.js');
 var Schema = require('mongoose').Schema;
+var Vegetable = require("./fixtures.js");
 var SchemaGenerator = require('../JsonSchemaGenerator.js');
 
 var generator = new SchemaGenerator();
 
-var Berry = new Schema({
-    name: { type: String, required: true }
-}, {_id: false});
-
-var Vegetable = new Schema({
-    name: { type: String, required: true },
-    lastname: String,
-    great: Boolean,
-    date: Date,
-    nicknames: [String],
-    berries: [Berry],
-    embedded: {
-        x: String,
-        y: String
-    },
-    related: { type: Schema.ObjectId, ref: 'vegetable' }
-});
 
 describe('JsonSchemaGenerator', function () {
 
@@ -56,6 +40,13 @@ describe('JsonSchemaGenerator', function () {
         expect(property.items).to.have.property("type", "string");
         done();
     });
+    it('should generate array of string prop correctly (2)', function (done) {
+        var property = generator.generateArray(Vegetable.paths["moreNicknames"]);
+        console.log(JSON.stringify(property));
+        expect(property).to.have.property("type", "array");
+        expect(property.items).to.have.property("type", "string");
+        done();
+    });
     it('should generate array of objects prop correctly', function (done) {
         var property = generator.generateArray(Vegetable.paths["berries"]);
         console.log(JSON.stringify(property));
@@ -66,8 +57,7 @@ describe('JsonSchemaGenerator', function () {
     it('should generate ObjectId prop correctly', function (done) {
         var property = generator.generateObjectId(Vegetable.paths["related"]);
         console.log(JSON.stringify(property));
-        expect(property).to.have.property("type", "ref");
-        expect(property).to.have.property("url", "vegetable");
+        expect(property).to.have.property("type", "string");
         done();
     });
     it('should find embeddeds', function (done) {
@@ -82,7 +72,7 @@ describe('JsonSchemaGenerator', function () {
         expect(schema.properties._id).to.have.property("required",false);
        expect(schema.properties.__v).to.have.property("type","double");
         expect(schema.properties.embedded.properties).to.have.property("x");
-        expect(Object.keys(schema.properties).length).to.be(10);
+        expect(Object.keys(schema.properties).length).to.be(13);
         done();
     });
 });
