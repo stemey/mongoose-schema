@@ -185,6 +185,11 @@ JsonSchemaGenerator.prototype.generateTypeEmbedded = function (type) {
     return schema;
 }
 
+
+JsonSchemaGenerator.prototype.generateTypeObjectId = function (type) {
+    return {type: "string"};
+}
+
 JsonSchemaGenerator.prototype.setGeneralProperties = function (property, path) {
     property.required = path.options.required === true;
 }
