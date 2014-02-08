@@ -175,6 +175,10 @@ JsonSchemaGenerator.prototype.generateObjectId = function (path, schema) {
     return property;
 }
 
+JsonSchemaGenerator.prototype.generateTypeObjectId = function (type) {
+    return {type: "string"};
+}
+
 JsonSchemaGenerator.prototype.generateTypeString = function (type) {
     return {type: "string"};
 }
@@ -183,11 +187,6 @@ JsonSchemaGenerator.prototype.generateTypeEmbedded = function (type) {
     var schema = this.generate(type);
     schema.type = "object";
     return schema;
-}
-
-
-JsonSchemaGenerator.prototype.generateTypeObjectId = function (type) {
-    return {type: "string"};
 }
 
 JsonSchemaGenerator.prototype.setGeneralProperties = function (property, path) {

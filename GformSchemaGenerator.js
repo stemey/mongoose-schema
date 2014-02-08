@@ -9,6 +9,7 @@ var AbstractSchemaGenerator = require('./AbstractSchemaGenerator');
 
 // __Module Definition__
 var GformSchemaGenerator = module.exports = function () {
+    this.groupCreator = null;
 };
 
 GformSchemaGenerator.prototype = new AbstractSchemaGenerator();
@@ -18,7 +19,13 @@ GformSchemaGenerator.prototype = new AbstractSchemaGenerator();
 GformSchemaGenerator.prototype.generate = function (schema) {
 
     var definition = {};
-    definition.attributes = this.generateAttributes(schema);
+    var attributes = this.generateAttributes(schema);
+    if (this.groupCreator) {
+        definition = this.groupCreator.create(schema, schema.options.gform, attributes);
+    } else {
+        definition = {};
+        definition.attributes = attributes;
+    }
     return definition;
 }
 
@@ -26,8 +33,14 @@ GformSchemaGenerator.prototype.generate = function (schema) {
 // A method used to generate a Swagger model definition for a controller
 GformSchemaGenerator.prototype.generateSchema = function (schema) {
     if (schema.paths) {
-        var definition = {};
-        definition.attributes = this.generateAttributes(schema);
+        var definition;
+        var attributes = this.generateAttributes(schema);
+        if (this.groupCreator) {
+            definition = this.groupCreator.create(schema, schema.options.gform, attributes);
+        } else {
+            definition = {};
+            definition.attributes = attributes;
+        }
         return definition;
     } else {
         return this.generateAttribute(schema);
@@ -71,8 +84,8 @@ GformSchemaGenerator.prototype.generateAttributes = function (schema) {
 };
 
 GformSchemaGenerator.prototype.generateString = function (name, path, schema) {
-    var attribute = this.generateTypeString(path.options);
     this.setGeneralProperties(name, attribute, path);
+    var attribute = this.generateTypeString(path.options);
     return attribute;
 }
 
@@ -80,6 +93,7 @@ GformSchemaGenerator.prototype.generateTypeString = function (type) {
     var attribute = {type: "string"};
     if (type.enum) {
         attribute.values = type.enum;
+        attribute.required = true;
     }
     if (type.match) {
         attribute.pattern = type.match.toString();
@@ -198,6 +212,7 @@ GformSchemaGenerator.prototype.generateTypeEmbedded = function (type) {
 
 GformSchemaGenerator.prototype.setGeneralProperties = function (name, attribute, path) {
     attribute.required = path.options.required;
+    this.copyProperties(attribute, path.options.gform);
     attribute.code = name;
     if (name === "_id") {
         attribute.disabled = true;
@@ -206,6 +221,16 @@ GformSchemaGenerator.prototype.setGeneralProperties = function (name, attribute,
         attribute.disabled = true;
     }
 }
+
+GformSchemaGenerator.prototype.copyProperties = function (attribute, props) {
+    if (props) {
+        Object.keys(props).forEach(function (prop) {
+            attribute[prop] = props[prop];
+        })
+    }
+
+}
+
 
 
 

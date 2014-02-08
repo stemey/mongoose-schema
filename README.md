@@ -1,5 +1,4 @@
 mongoose-schema
-==============
 
 
 mongoose-schema provides `SchemaGenerator` classes to create different json schemas from Mongoose's schema. Currently the following shemas are supported:
@@ -10,3 +9,4 @@ mongoose-schema provides `SchemaGenerator` classes to create different json sche
 
 [json schema]: http://json-schema.org
 [gform schema]: http://toobop.net
+[swagger]: http://swagger.wordnik.com/
