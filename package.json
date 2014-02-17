@@ -1,7 +1,7 @@
 {
   "name": "mongoose-schema",
-  "version": "0.0.3",
-  "description": "",
+  "version": "0.0.5",
+  "description": "creates various schema from mongoose's own schema",
   "main": "index.js",
   "author": {
     "name": "Stefan Meyer"
@@ -17,6 +17,6 @@
     "expect.js": "~0.2.0",
     "mongoose": "~3.8.1",
     "async": "~0.2.9"
-  }
-
+  },
+   "readmeFilename": "README.md"
 }
