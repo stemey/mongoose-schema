@@ -84,8 +84,8 @@ GformSchemaGenerator.prototype.generateAttributes = function (schema) {
 };
 
 GformSchemaGenerator.prototype.generateString = function (name, path, schema) {
-    this.setGeneralProperties(name, attribute, path);
     var attribute = this.generateTypeString(path.options);
+    this.setGeneralProperties(name, attribute, path);
     return attribute;
 }
 
