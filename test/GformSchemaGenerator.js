@@ -76,7 +76,7 @@ describe('GformSchemaGenerator', function () {
             return a.code == "embedded"
         })[0];
         expect(embedded.group.attributes[0]).to.have.property("code", "x");
-        expect(Object.keys(schema.attributes).length).to.be(12);
+        expect(Object.keys(schema.attributes).length).to.be(13);
         done();
     });
 });

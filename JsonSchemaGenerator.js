@@ -75,7 +75,7 @@ JsonSchemaGenerator.prototype.generateProperties = function (schema) {
 
     // also called for mebedded
     if (schema.options && schema.options.versionKey) {
-        properties[schema.options.versionKey] = {type: "double", required: false}
+        properties[schema.options.versionKey] = {type: "number", required: false}
     }
 
     return properties;
@@ -105,10 +105,10 @@ JsonSchemaGenerator.prototype.generateBoolean = function (path, schema) {
     return property;
 }
 
-JsonSchemaGenerator.prototype.generateDouble = function (path, schema) {
+JsonSchemaGenerator.prototype.generateNumber = function (path, schema) {
     var property = {};
     this.setGeneralProperties(property, path);
-    property.type = "double";
+    property.type = "number";
     if (path.options.min) {
         property.min = path.options.min;
     }
@@ -117,6 +117,7 @@ JsonSchemaGenerator.prototype.generateDouble = function (path, schema) {
     }
     return property;
 }
+
 
 JsonSchemaGenerator.prototype.generateDate = function (path, schema) {
     var property = {};

@@ -10,6 +10,7 @@ var Vegetable = new Schema({
     lastname: String,
     great: Boolean,
     date: Date,
+    number: Number,
     label: {type: String, enum: ["my", "your"]},
     nicknames: [String],
     moreNicknames: [
