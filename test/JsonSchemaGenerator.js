@@ -60,6 +60,12 @@ describe('JsonSchemaGenerator', function () {
         expect(property).to.have.property("type", "string");
         done();
     });
+    it('should generate number prop correctly', function (done) {
+        var property = generator.generateNumber(Vegetable.paths["number"]);
+        console.log(JSON.stringify(property));
+        expect(property).to.have.property("type", "number");
+        done();
+    });
     it('should find embeddeds', function (done) {
         var embeddeds = generator.findEmbeddeds(Vegetable);
         expect(embeddeds.embedded.length).to.be(2);
@@ -70,9 +76,9 @@ describe('JsonSchemaGenerator', function () {
         var schema = generator.generate(Vegetable);
         console.log(JSON.stringify(schema));
         expect(schema.properties._id).to.have.property("required",false);
-       expect(schema.properties.__v).to.have.property("type","double");
+        expect(schema.properties.__v).to.have.property("type","number");
         expect(schema.properties.embedded.properties).to.have.property("x");
-        expect(Object.keys(schema.properties).length).to.be(13);
+        expect(Object.keys(schema.properties).length).to.be(14);
         done();
     });
 });
