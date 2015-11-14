@@ -40,8 +40,11 @@ JsonSchemaGenerator.prototype.generateSchema = function (schema) {
 
 JsonSchemaGenerator.prototype.generateProperty = function (path, schema) {
     var property = {};
-    //var select = controller.get('select');
-    var method = "generate" + this.swaggerTypeFor(path.options.type).type;
+   var type = this.swaggerTypeFor(path.options.type);
+    if (!type) {
+        return undefined;
+    }
+    var method = "generate" + type.type;
     if (typeof this[method] === "function") {
         var property = this[method](path, schema);
     } else {
@@ -59,7 +62,9 @@ JsonSchemaGenerator.prototype.generateProperties = function (schema) {
 
         if (!this.getEmbeddedName(name) && this.isIncluded(name, schema.paths[name].options)) {
             var property = this.generateProperty(schema.paths[name], schema);
-            properties[name] = property;
+            if (property) {
+                properties[name] = property;
+            }
 
 
         }

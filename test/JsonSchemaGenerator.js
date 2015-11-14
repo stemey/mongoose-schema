@@ -2,6 +2,9 @@ var expect = require('expect.js');
 var Schema = require('mongoose').Schema;
 var Vegetable = require("./fixtures.js");
 var SchemaGenerator = require('../JsonSchemaGenerator.js');
+var acl = require('mongoose-acl');
+var NestedSet = require('mongoose-nested-set');
+
 
 var generator = new SchemaGenerator();
 
@@ -73,6 +76,16 @@ describe('JsonSchemaGenerator', function () {
         done();
     });
    it('should generate a Schema correctly', function (done) {
+        var schema = generator.generate(Vegetable);
+        console.log(JSON.stringify(schema));
+        expect(schema.properties._id).to.have.property("required",false);
+        expect(schema.properties.__v).to.have.property("type","number");
+        expect(schema.properties.embedded.properties).to.have.property("x");
+        expect(Object.keys(schema.properties).length).to.be(14);
+        done();
+    });
+    it('should support acl', function (done) {
+        Vegetable.plugin(acl.object);
         var schema = generator.generate(Vegetable);
         console.log(JSON.stringify(schema));
         expect(schema.properties._id).to.have.property("required",false);

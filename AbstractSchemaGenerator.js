@@ -52,6 +52,9 @@ AbstractSchemaGenerator.prototype.convertType = function (type) {
 // Convert a Mongoose type into a Swagger type
 AbstractSchemaGenerator.prototype.swaggerTypeFor = function (type) {
     // type may be a Schema or an object with property type
+    if (typeof type === "undefined") {
+        return undefined;
+    }else
     if (type === mongoose.Schema.Types.Array || Array.isArray(type)) {
         return {type:'Array'};
     } else if (type.type) {

@@ -3,6 +3,7 @@ var Schema = require('mongoose').Schema;
 var Vegetable = require("./fixtures.js");
 var SchemaGenerator = require('../GformSchemaGenerator.js');
 
+
 var generator = new SchemaGenerator();
 
 
